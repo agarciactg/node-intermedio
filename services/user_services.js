@@ -1,4 +1,6 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
+const getConnection = require('../libs/postgres');
 
 class UserServices {
   constructor() {
@@ -26,15 +28,24 @@ class UserServices {
     return newUser;
   }
 
-  find() {
-    return this.users;
+  async find() {
+    const client = await getConnection();
+    const rta = await client.query('SELECT * FROM tasks');
+    console.log(rta.rows, '++++++++++++++++');
+    return rta.rows;
   }
 
   findOne(id) {
-    return this.users.find((item) => item.id === id);
+    const user = this.users.find((item) => item.id === id);
+
+    if (!user) {
+      throw boom.notFound('User not found');
+    }
+
+    return user;
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.users.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error('User not found');
@@ -58,7 +69,6 @@ class UserServices {
       id: id,
     };
   }
-
 }
 
 module.exports = UserServices;

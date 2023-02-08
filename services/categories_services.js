@@ -1,4 +1,5 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class CategoriesService {
   constructor() {
@@ -31,10 +32,16 @@ class CategoriesService {
   }
 
   findOne(id) {
-    return this.categories.find((item) => item.id === id);
+    const category = this.categories.find((item) => item.id === id);
+
+    if (!category) {
+      throw boom.notFound('Category not found');
+    }
+
+    return category;
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.categories.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error('Categories not found');

@@ -4,13 +4,13 @@ const UserService = require('./../services/user_services');
 const router = express.Router();
 const service = new UserService();
 
-router.get('/', (req, res) => {
-  /*
-   * Obtener parametros por query.
-   * const { limit, offset } = req.query;
-   */
-  const users = service.find();
-  res.json(users);
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await service.find();
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/:id', (req, res) => {
@@ -25,11 +25,17 @@ router.post('/', (req, res) => {
   res.status(201).json(newUser);
 });
 
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  const user = service.update(id, body);
-  res.json(user);
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const user = await service.update(id, body);
+    res.json(user);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message,
+    });
+  }
 });
 
 router.delete('/:id', (req, res) => {

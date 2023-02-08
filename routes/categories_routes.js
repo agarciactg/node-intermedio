@@ -27,17 +27,23 @@ router.post('/', (req, res) => {
   res.status(201).json(newCategory);
 });
 
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  const category = service.update(id, body);
-  res.json(category);
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const category = await service.update(id, body);
+    res.json(category);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message,
+    });
+  }
 });
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
   const rta = service.delete(id);
-  res.json(rta);  
+  res.json(rta);
 });
 
 module.exports = router;
