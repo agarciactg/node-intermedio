@@ -24,13 +24,14 @@ class UserServices {
     }
   }
 
-  create(data) {
-    const newUser = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.users.push(newUser);
+  async create(data) {
+    const newUser = await models.User.create(data);
     return newUser;
+    // const newUser = {
+    //   id: faker.datatype.uuid(),
+    //   ...data,
+    // };
+    // this.users.push(newUser);
   }
 
   async find() {
@@ -38,39 +39,51 @@ class UserServices {
     return rta;
   }
 
-  findOne(id) {
-    const user = this.users.find((item) => item.id === id);
-
+  async findOne(id) {
+    const user = await models.User.findByPk(id);
     if (!user) {
-      throw boom.notFound('User not found');
+      throw boom.notFound('user not found');
     }
-
     return user;
+    // const user = this.users.find((item) => item.id === id);
+
+    // if (!user) {
+    //   throw boom.notFound('User not found');
+    // }
+
+    // return user;
   }
 
   async update(id, changes) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('User not found');
-    }
-    const user = this.users[index];
-    this.users[index] = {
-      ...user,
-      ...changes,
-    };
-    return this.users[index];
+    const user = this.findOne(id);
+    const rta = await user.update(changes);
+    return rta;
+
+    // const index = this.users.findIndex((item) => item.id === id);
+    // if (index === -1) {
+    //   throw new Error('User not found');
+    // }
+    // const user = this.users[index];
+    // this.users[index] = {
+    //   ...user,
+    //   ...changes,
+    // };
+    // return this.users[index];
   }
 
-  delete(id) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('Users not found');
-    }
-    this.users.splice(index, 1);
-    return {
-      message: 'ok',
-      id: id,
-    };
+  async delete(id) {
+    const user = this.findOne(id);
+    await user.destroy;
+    return { id };
+    // const index = this.users.findIndex((item) => item.id === id);
+    // if (index === -1) {
+    //   throw new Error('Users not found');
+    // }
+    // this.users.splice(index, 1);
+    // return {
+    //   message: 'ok',
+    //   id: id,
+    // };
   }
 }
 
