@@ -153,6 +153,8 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+# volumes
 postgres_data
+mysql_data
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,node
