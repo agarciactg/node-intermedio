@@ -20,12 +20,8 @@ class CategoriesService {
     }
   }
 
-  create(data) {
-    const newCategory = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.categories.push(newCategory);
+  async create(data) {
+    const newCategory = await models.Category.create(data);
     return newCategory;
   }
 
@@ -34,39 +30,24 @@ class CategoriesService {
     return rta;
   }
 
-  findOne(id) {
-    const category = this.categories.find((item) => item.id === id);
-
+  async findOne(id) {
+    const category = await models.Category.findByPk(id);
     if (!category) {
       throw boom.notFound('Category not found');
     }
-
     return category;
   }
 
   async update(id, changes) {
-    const index = this.categories.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('Categories not found');
-    }
-    const category = this.categories[index];
-    this.categories[index] = {
-      ...category,
-      ...changes,
-    };
-    return this.categories[index];
+    const category = this.findOne(id);
+    const response = await category.update(change);
+    return response;
   }
 
-  delete(id) {
-    const index = this.categories.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('Categories not found');
-    }
-    this.categories.splice(index, 1);
-    return {
-      message: 'ok',
-      id: id,
-    };
+  async delete(id) {
+    const category = this.findOne(id);
+    await category.destroy();
+    return { id };
   }
 }
 

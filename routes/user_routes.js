@@ -28,7 +28,6 @@ router.get(
     try {
       const { id } = req.params;
       const user = await service.findOne(id);
-      console.log(user);
       res.json(user);
     } catch (error) {
       console.log(error, 'GET_DETAIL_USER');
