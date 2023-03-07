@@ -1,0 +1,11 @@
+- Comando para generar migraciones:
+	- npm run migrations:generate add-role
+
+
+- Comando para correr migraciones:
+	- npm run migrations:run
+
+- Conexión data base (server)
+
+	username - androxus
+	password - admin123
