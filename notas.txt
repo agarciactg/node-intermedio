@@ -1,7 +1,6 @@
 - Comando para generar migraciones:
 	- npm run migrations:generate add-role
 
-
 - Comando para correr migraciones:
 	- npm run migrations:run
 
@@ -9,3 +8,12 @@
 
 	username - androxus
 	password - admin123
+
+- relaciones
+  hasMany
+  BelongsTo
+  HasOne
+
+- Si tienen algún problema al hacer la migración pueden usar el comando:
+
+  sequelize-cli db:migrate --debug

@@ -8,21 +8,21 @@ const { models } = require('./../libs/sequelize');
 class UserServices {
   constructor() {
     this.users = [];
-    this.generate();
+    // this.generate();
     this.pool = pool;
     this.pool.on('error', (err) => console.log(err));
   }
 
-  generate() {
-    const limit = 20;
-    for (let index = 0; index < limit; index++) {
-      this.users.push({
-        id: faker.datatype.uuid(),
-        name: faker.name.findName(),
-        email: faker.internet.email(),
-      });
-    }
-  }
+  // generate() {
+  //   const limit = 20;
+  //   for (let index = 0; index < limit; index++) {
+  //     this.users.push({
+  //       id: faker.datatype.uuid(),
+  //       name: faker.name.findName(),
+  //       email: faker.internet.email(),
+  //     });
+  //   }
+  // }
 
   async create(data) {
     const newUser = await models.User.create(data);
@@ -35,7 +35,9 @@ class UserServices {
   }
 
   async find() {
-    const rta = await models.User.findAll();
+    const rta = await models.User.findAll({
+      include: ['customer'],
+    });
     return rta;
   }
 
